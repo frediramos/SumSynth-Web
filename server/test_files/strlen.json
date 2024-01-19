@@ -1,0 +1,297 @@
+{
+	"node": "prog",
+	"items": [
+		{
+			"node": "fundef",
+			"type": {
+				"node": "type",
+				"name": "strlen",
+				"type": {
+					"node": "typeid",
+					"type": "int32"
+				}
+			},
+			"name": "strlen",
+			"params": [
+				{
+					"node": "decl",
+					"name": "s",
+					"type": {
+						"node": "ptr",
+						"type": {
+							"node": "type",
+							"name": "s",
+							"type": {
+								"node": "typeid",
+								"type": "int8"
+							}
+						}
+					}
+				}
+			],
+			"body": {
+				"node": "block",
+				"items": [
+					{
+						"node": "assign",
+						"left": {
+							"node": "decl",
+							"name": "var1",
+							"type": {
+								"node": "type",
+								"name": "var1",
+								"type": {
+									"node": "typeid",
+									"type": "int32"
+								}
+							}
+						},
+						"right": {
+							"node": "funcall",
+							"name": "fold_str",
+							"args": [
+								{
+									"node": "id",
+									"name": "s"
+								}
+							]
+						}
+					},
+					{
+						"node": "assign",
+						"left": {
+							"node": "decl",
+							"name": "ret",
+							"type": {
+								"node": "type",
+								"name": "ret",
+								"type": {
+									"node": "typeid",
+									"type": "int32"
+								}
+							}
+						},
+						"right": {
+							"node": "id",
+							"name": "var1"
+						}
+					},
+					{
+						"node": "return",
+						"expr": {
+							"node": "id",
+							"name": "ret"
+						}
+					}
+				]
+			}
+		},
+		{
+			"node": "fundef",
+			"type": {
+				"node": "type",
+				"name": "fold_str",
+				"type": {
+					"node": "typeid",
+					"type": "int32"
+				}
+			},
+			"name": "fold_str",
+			"params": [
+				{
+					"node": "decl",
+					"name": "s",
+					"type": {
+						"node": "ptr",
+						"type": {
+							"node": "type",
+							"name": "s",
+							"type": {
+								"node": "typeid",
+								"type": "int8"
+							}
+						}
+					}
+				}
+			],
+			"body": {
+				"node": "block",
+				"items": [
+					{
+						"node": "assign",
+						"left": {
+							"node": "decl",
+							"name": "var1",
+							"type": {
+								"node": "type",
+								"name": "var1",
+								"type": {
+									"node": "typeid",
+									"type": "int8"
+								}
+							}
+						},
+						"right": {
+							"node": "memread",
+							"expr": {
+								"node": "id",
+								"name": "s"
+							}
+						}
+					},
+					{
+						"node": "if",
+						"cond": {
+							"node": "apicall",
+							"name": "is_certain",
+							"args": [
+								{
+									"node": "binop",
+									"op": " == ",
+									"left": {
+										"node": "id",
+										"name": "var1"
+									},
+									"right": {
+										"node": "const",
+										"type": "int8",
+										"value": 0
+									}
+								}
+							]
+						},
+						"iftrue": {
+							"node": "block",
+							"items": [
+								{
+									"node": "assign",
+									"left": {
+										"node": "decl",
+										"name": "n",
+										"type": {
+											"node": "type",
+											"name": "n",
+											"type": {
+												"node": "typeid",
+												"type": "int32"
+											}
+										}
+									},
+									"right": {
+										"node": "const",
+										"type": "int32",
+										"value": 0
+									}
+								},
+								{
+									"node": "return",
+									"expr": {
+										"node": "id",
+										"name": "n"
+									}
+								}
+							]
+						},
+						"iffalse": {
+							"node": "block",
+							"items": [
+								{
+									"node": "apicall",
+									"name": "assume",
+									"args": [
+										{
+											"node": "unop",
+											"op": "!",
+											"expr": {
+												"node": "binop",
+												"op": " == ",
+												"left": {
+													"node": "id",
+													"name": "var1"
+												},
+												"right": {
+													"node": "const",
+													"type": "int8",
+													"value": 0
+												}
+											}
+										}
+									]
+								},
+								{
+									"node": "assign",
+									"left": {
+										"node": "decl",
+										"name": "var2",
+										"type": {
+											"node": "type",
+											"name": "var2",
+											"type": {
+												"node": "typeid",
+												"type": "int32"
+											}
+										}
+									},
+									"right": {
+										"node": "funcall",
+										"name": "fold_str",
+										"args": [
+											{
+												"node": "binop",
+												"op": " + ",
+												"left": {
+													"node": "id",
+													"name": "s"
+												},
+												"right": {
+													"node": "const",
+													"type": "int32",
+													"value": 1
+												}
+											}
+										]
+									}
+								},
+								{
+									"node": "assign",
+									"left": {
+										"node": "decl",
+										"name": "n",
+										"type": {
+											"node": "type",
+											"name": "n",
+											"type": {
+												"node": "typeid",
+												"type": "int32"
+											}
+										}
+									},
+									"right": {
+										"node": "binop",
+										"op": " + ",
+										"left": {
+											"node": "id",
+											"name": "var2"
+										},
+										"right": {
+											"node": "const",
+											"type": "int32",
+											"value": 1
+										}
+									}
+								},
+								{
+									"node": "return",
+									"expr": {
+										"node": "id",
+										"name": "n"
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	]
+}
