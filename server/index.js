@@ -37,24 +37,16 @@ function deleteFile(file){
 // spec: handwritten input spec
 // gen: under|over|exact generator
 // lang: c|py| output language
-
 function genSummary(spec, gen, lang){
-    const test_file = "test_files/strlen.json"
     let summ = "";
 
     const tmp_spec = tmpName();
-    // const tmp_json = tmpName();
-    const tmp_json = test_file;
+    const tmp_json = tmpName();
     const tmp_summ = tmpName();
 
     try{
-        // fs.writeFileSync(tmp_spec, spec)
-        
-        // let 'spec2json' be a symlink to a sumsynth binary
-        //  (compiled haskell with stack build?)
-        
-        // execSync(`spec2json ${spec} ${tmp_json} ${gen}`);   
-        
+        fs.writeFileSync(tmp_spec, spec)
+        execSync(`spec2json ${spec} ${tmp_json} ${gen}`);   
         execSync(`json2summ -${lang} ${tmp_json} -o ${tmp_summ}`);   
         summ = fs.readFileSync(tmp_summ).toString();
     }
@@ -63,7 +55,7 @@ function genSummary(spec, gen, lang){
     }
 
     deleteFile(tmp_spec);
-    // deleteFile(tmp_json);
+    deleteFile(tmp_json);
     deleteFile(tmp_summ);
 
     return summ;
