@@ -2,19 +2,21 @@ const express = require('express');
 const Joi = require('joi');
 const app = express();
 const fs = require('fs');
+const cors = require('cors');
 const execSync = require('child_process').execSync;
 
 // Dont need to block CPU to gen a temp string
 // Can use 'non-secure'
 const nanoid = require('nanoid/non-secure')
 
+app.use(cors());
 app.use(express.json())
 
 const languages = ['c', 'py']
 const generators = ['under', 'over', 'exact']
 
 const postSchema = Joi.object({
-    spec: Joi.string().required(),
+    spec: Joi.string().min(1).required(),
     gen: Joi.string().valid(...generators).required(),
     lang: Joi.string().valid(...languages).required(),
 });
@@ -46,7 +48,7 @@ function genSummary(spec, gen, lang){
 
     try{
         fs.writeFileSync(tmp_spec, spec)
-        execSync(`spec2json ${spec} ${tmp_json} ${gen}`);   
+        execSync(`spec2json ${tmp_spec} ${tmp_json} ${gen}`);   
         execSync(`json2summ -${lang} ${tmp_json} -o ${tmp_summ}`);   
         summ = fs.readFileSync(tmp_summ).toString();
     }
@@ -62,9 +64,8 @@ function genSummary(spec, gen, lang){
 }
 
 app.post('/gen', (req, res) => {
+    const result = postSchema.validate(req.body);   
 
-    const result = postSchema.validate(req.body);
-    
     if (result.error){
         res.status(400).send(result.error.details[0].message);
         return;
@@ -78,9 +79,12 @@ app.post('/gen', (req, res) => {
     
     const summ = genSummary(spec, gen, lang)
 
+    console.log(`Computed Summary:\n ${summ}`)
+
     const summary = {   
+        code: summ,
+        gen: gen,
         lang: lang,
-        code: summ
     };
     
     res.send(summary);
