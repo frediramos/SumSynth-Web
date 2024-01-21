@@ -20,6 +20,5 @@ $ nodemon index.js
 
 ## Start Client
 ```sh
-$ npm i
-$ npm i -g nodemon
+$ npm start
 ```
