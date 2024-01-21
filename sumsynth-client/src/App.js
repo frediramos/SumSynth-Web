@@ -14,7 +14,7 @@ function App() {
   const [language, setLang] = useState('c');
   const [generator, setGenerator] = useState('under');
   
-  const [isSummReceived, setIsSummReceived] = useState(false);
+  const [inputError, setInputError] = useState(false)
   const [genSummary, setgenSummary] = useState('')
 
   const handleInputChange = (event) => {
@@ -41,22 +41,26 @@ function App() {
                 gen: generator,
                 lang: language,
             })
-        }).then(response =>
-                {if(response.ok)
-                    {return response.json()}
-                }).then((responseJson) => {
+        }).then(response => {	
+					if(response.ok){return response.json();}
+					throw new Error(response.status);
+                
+		}).then((responseJson) => {
             
             const code = responseJson.code
             console.log(code);
 
             if(code){
                 setgenSummary(code);
-                setIsSummReceived(true);
+				setInputError(false);
             } 
             
-        });
-    }
-    catch (err) {
+        }).catch((error) => {
+			console.log('error: ' + error);
+			setInputError(true);
+		});
+    
+	} catch (err) {
         console.error(err);
     }
   };
@@ -68,18 +72,37 @@ function App() {
     <div className='container'> 
 
       <div className='formBox'>
-        <div className='titles'> Summary Specification </div>
-        <form className='form' onSubmit={handleFormSubmit}>
-          <TextField 
+        <div className='titles'>Summary Specification</div>
+        
+		<form className='form' onSubmit={handleFormSubmit}>
+		{!inputError && <TextField 
             fullWidth 
             multiline
-            label="Input Spec" 
-            id="fullWidth" 
+            label="Input Spec"
+			placeholder="> Spec" 
             value={inputSpec}
             onChange={handleInputChange}
-          />
+			color='warning'
+			variante='outlined'
+			rows={10}
+		/>}
 
-        <div className='generators'> 
+		{inputError && <TextField
+			error
+			helperText="Invalid input spec."
+			fullWidth 
+			multiline
+			label="Input Spec"
+			placeholder="> Spec" 
+			value={inputSpec}
+			onChange={handleInputChange}
+			color='warning'
+			variante='outlined'
+			rows={10}
+		/>}
+
+        
+		<div className='generators'> 
         <ToggleButtonGroup
             style={{marginTop: "1%"}}
             sx={{ mb: 1 }}
@@ -114,27 +137,14 @@ function App() {
 
 
       <div className='responseBox'>
-        <div className='titles'> Generated Summary </div>
-        {isSummReceived &&
-        
+        <div className='titles'>Generated Summary</div>
         <TextField
         label="Summary" 
             fullWidth 
             multiline
-            id="fullWidth" 
             value={genSummary}
+			color='warning'
         />   
-        }
-
-        {!isSummReceived &&
-        <TextField 
-            label="Summary" 
-            fullWidth 
-            multiline
-            id="fullWidth" 
-        />   
-        } 
-
       </div>     
     </div>
     </>

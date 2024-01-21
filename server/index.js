@@ -78,6 +78,10 @@ app.post('/gen', (req, res) => {
     console.log(`Request Received:\n spec: ${spec}\n generator: ${gen}\n language: ${lang}\n`)
     
     const summ = genSummary(spec, gen, lang)
+    if(!summ){
+        res.status(400).send("Invalid input spec!");
+        return;
+    }
 
     console.log(`Computed Summary:\n ${summ}`)
 
