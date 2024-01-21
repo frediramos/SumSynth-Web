@@ -3,13 +3,17 @@ import Topbar from "./topbar/Topbar";
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Box } from '@mui/material';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 
 const endpoint = "http://localhost:3000/gen"
 
 function App() {
 
   const [inputSpec, setinputSpec] = useState('');
+  const [language, setLang] = useState('c');
+  const [generator, setGenerator] = useState('under');
+  
   const [isSummReceived, setIsSummReceived] = useState(false);
   const [genSummary, setgenSummary] = useState('')
 
@@ -21,6 +25,11 @@ function App() {
     event.preventDefault();
     console.log('Sending text to the server:', inputSpec);
     
+    if(!inputSpec){
+        setgenSummary("");
+        return;
+    }
+
     try {
         fetch(endpoint, {
             method: 'POST',
@@ -29,10 +38,13 @@ function App() {
             },
             body: JSON.stringify({
                 spec: inputSpec,
-                gen: "under",
-                lang: "c",
+                gen: generator,
+                lang: language,
             })
-        }).then((response) => response.json()).then((responseJson) => {
+        }).then(response =>
+                {if(response.ok)
+                    {return response.json()}
+                }).then((responseJson) => {
             
             const code = responseJson.code
             console.log(code);
@@ -49,10 +61,6 @@ function App() {
     }
   };
 
-  const handleNewSubmission = (event) => {
-    setIsSummReceived(false);
-
-  }
 
   return (
     <>
@@ -70,17 +78,47 @@ function App() {
             value={inputSpec}
             onChange={handleInputChange}
           />
-          <Button style={{marginTop: "1%"}} type="submit" variant="contained" color="primary">
-            Submit
+
+        <div className='generators'> 
+        <ToggleButtonGroup
+            style={{marginTop: "1%"}}
+            sx={{ mb: 1 }}
+            exclusive
+            value={generator}
+            onChange={(_e, gen) => {if(gen !== null) setGenerator(gen);}}
+            >
+            <ToggleButton value='under' aria-label='Under'>Under</ToggleButton>
+            <ToggleButton value='over' aria-label='Over'>Over</ToggleButton>
+            <ToggleButton value='exact' aria-label='Exact'>Exact</ToggleButton>
+        </ToggleButtonGroup>
+        </div>
+
+        <div className='language'> 
+        <ToggleButtonGroup
+            sx={{ mb: 1 }}
+            exclusive
+            value={language}
+            onChange={(_e, lang) => {if(lang !== null) setLang(lang);}}
+            >
+            <ToggleButton value='c' aria-label='C'>C</ToggleButton>
+            <ToggleButton value='py' aria-label='Python'>Python</ToggleButton>
+        </ToggleButtonGroup>
+        </div>
+
+          <Button type="submit" variant="contained" color="primary">
+            Generate
           </Button>      
         </form>
-      </div>  
+      </div>
+
+
 
       <div className='responseBox'>
         <div className='titles'> Generated Summary </div>
         {isSummReceived &&
         
-        <TextField 
+        <TextField
+        label="Summary" 
             fullWidth 
             multiline
             id="fullWidth" 
@@ -90,6 +128,7 @@ function App() {
 
         {!isSummReceived &&
         <TextField 
+            label="Summary" 
             fullWidth 
             multiline
             id="fullWidth" 
