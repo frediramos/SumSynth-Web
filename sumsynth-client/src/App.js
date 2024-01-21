@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 
-const endpoint = "http://localhost:3000/gen"
+const endpoint = "http://localhost:3001/gen"
 
 function App() {
 
@@ -105,7 +105,7 @@ function App() {
         </ToggleButtonGroup>
         </div>
 
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" className='submitButton'>
             Generate
           </Button>      
         </form>

@@ -1,38 +1,27 @@
 .container {
   display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+  grid-template-rows: auto;
   gap: 1%;
-  grid-template-columns: repeat(2, 1fr);
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
 .formBox {
   width: 80%;
   justify-self: center;
-  align-self: center; 
-  margin-top: 10%;
+  align-self: start; 
+}
+
+.submitButton {
+  background-color: #343434 !important;
 }
 
 .responseBox {
   width: 80%;
-  margin-top: 10%;
 }
 
 .titles {
   font-size: x-large;
   margin-bottom: 2%;
 }
-
-.displayResponse {
-  width: 80%;
-  justify-self: center;
-  align-self: center; 
-  margin-top: 10%;
-}
-
-
-/* .displayResponse {
-  border: 1.5pt solid black; 
-  padding: 5%; 
-  width: 80%; 
-  text-align: left; 
-  background-color: #f0f0f0;  
-} */
