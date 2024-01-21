@@ -9,38 +9,48 @@ const endpoint = "http://localhost:3000/gen"
 
 function App() {
 
-  const [codeSnippet, setCodeSnippet] = useState('');
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [inputSpec, setinputSpec] = useState('');
+  const [isSummReceived, setIsSummReceived] = useState(false);
+  const [genSummary, setgenSummary] = useState('')
 
   const handleInputChange = (event) => {
-    setCodeSnippet(event.target.value);
+    setinputSpec(event.target.value);
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log('Sending text to the server:', inputSpec);
+    
     try {
-        const response = await fetch(endpoint, {
+        fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                spec: codeSnippet,
+                spec: inputSpec,
                 gen: "under",
                 lang: "c",
             })
-        });
+        }).then((response) => response.json()).then((responseJson) => {
+            
+            const code = responseJson.code
+            console.log(code);
 
-    }  catch (err) {
+            if(code){
+                setgenSummary(code);
+                setIsSummReceived(true);
+            } 
+            
+        });
+    }
+    catch (err) {
         console.error(err);
     }
-
-    console.log('Sending text to the server:', codeSnippet);
-    setIsFormSubmitted(true);
   };
 
   const handleNewSubmission = (event) => {
-    setIsFormSubmitted(false);
+    setIsSummReceived(false);
 
   }
 
@@ -50,14 +60,14 @@ function App() {
     <div className='container'> 
 
       <div className='formBox'>
-        <div className='titles'>Code</div>
+        <div className='titles'> Summary Specification </div>
         <form className='form' onSubmit={handleFormSubmit}>
           <TextField 
             fullWidth 
             multiline
-            label="Code Snippet" 
+            label="Input Spec" 
             id="fullWidth" 
-            value={codeSnippet}
+            value={inputSpec}
             onChange={handleInputChange}
           />
           <Button style={{marginTop: "1%"}} type="submit" variant="contained" color="primary">
@@ -67,48 +77,28 @@ function App() {
       </div>  
 
       <div className='responseBox'>
-        <div className='titles'>Results</div>
-        <div className='displayResponse'>
-          results goes here
-          <br/>
-          and also here
-          <br/>
-          and continues here...
-        </div>
-      </div>
-      
-
-      {/*{isFormSubmitted ? (
-        <div>
-          <p>Thank you for your submission!</p>
-          <Button onClick={handleNewSubmission} type="submit" variant="contained" color="primary">
-            Submit another code snippet
-          </Button> 
-        </div>
-      ) : 
-        (
-        <form className='form' onSubmit={handleFormSubmit}>
-          <TextField 
+        <div className='titles'> Generated Summary </div>
+        {isSummReceived &&
+        
+        <TextField 
             fullWidth 
             multiline
-            label="Code Snippet" 
             id="fullWidth" 
-            value={inputText}
-            onChange={handleInputChange}
-          />
-          <Button style={{marginTop: "1%"}} type="submit" variant="contained" color="primary">
-            Submit
-          </Button>      
-        </form>
-        )
-      }
-      */}
+            value={genSummary}
+        />   
+        }
 
+        {!isSummReceived &&
+        <TextField 
+            fullWidth 
+            multiline
+            id="fullWidth" 
+        />   
+        } 
+
+      </div>     
     </div>
-      
     </>
-    
-    
   );
 }
 

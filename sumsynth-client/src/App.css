@@ -22,9 +22,17 @@
 }
 
 .displayResponse {
+  width: 80%;
+  justify-self: center;
+  align-self: center; 
+  margin-top: 10%;
+}
+
+
+/* .displayResponse {
   border: 1.5pt solid black; 
   padding: 5%; 
   width: 80%; 
   text-align: left; 
   background-color: #f0f0f0;  
-}
+} */
