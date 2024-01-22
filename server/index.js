@@ -50,7 +50,7 @@ function genSummary(spec, gen, lang){
         fs.writeFileSync(tmp_spec, spec)
         execSync(`spec2json ${tmp_spec} ${tmp_json} ${gen}`);   
         execSync(`json2summ -${lang} ${tmp_json} -o ${tmp_summ}`);   
-        summ = fs.readFileSync(tmp_summ).toString();
+        summ = fs.readFileSync(tmp_summ).toString().trim();
     }
     catch (error) {
         console.error(error);
