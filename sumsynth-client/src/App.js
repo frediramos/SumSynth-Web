@@ -96,6 +96,7 @@ function App() {
 		{<TextField
 			error={inputError}
 			helperText={inputError? "Invalid input spec.": undefined}
+			placeholder={inputError? placeholder: undefined}
 			fullWidth 
 			multiline
 			value={first? inputSpec : undefined} 
