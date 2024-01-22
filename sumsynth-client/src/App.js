@@ -2,9 +2,11 @@ import './App.css';
 import Topbar from "./topbar/Topbar";
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import SyntaxHighlighter from 'react-syntax-highlighter'; 
 
 import strlen from "./placeholders/strlen.in";
 
@@ -16,6 +18,7 @@ function App() {
 	const [placeholder, setPlaceholder] = useState("");
 	const [inputSpec, setinputSpec] = useState("");
 	const [language, setLang] = useState('c');
+	const [displaylang, setDisplayLang] = useState('c');
 	const [generator, setGenerator] = useState('under');
 	
 	const [inputError, setInputError] = useState(false)
@@ -41,7 +44,6 @@ function App() {
 		event.preventDefault();
 		
 		if(!inputSpec){
-			console.log('here');
 			setgenSummary("");
 			return;
 		}
@@ -71,6 +73,7 @@ function App() {
 				if(code){
 					setgenSummary(code);
 					setInputError(false);
+					setDisplayLang(language)
 				} 
 				
 			}).catch((error) => {
@@ -142,13 +145,26 @@ function App() {
 
 	  <div className='responseBox'>
 		<div className='titles'>Generated Summary</div>
-		<TextField
-		label="Summary" 
-			fullWidth 
-			multiline
-			value={genSummary}
-			color='warning'
-		/>   
+		<Paper
+		fullWidth
+		variant='outlined'
+		sx ={{
+			minHeight: 260,
+			border: 1,
+			borderColor: "#b6b6b6"	
+		}}
+			
+		elevation={0}>
+          <SyntaxHighlighter
+		   language={displaylang==='c'? 'c':'python'}
+		   wrapLongLines customStyle={{
+				backgroundColor: "transparent",
+			 	marginTop: "-1pt",
+			 	marginBottom: "-1pt",
+		  	}}>
+		  {genSummary}
+          </SyntaxHighlighter>
+		</Paper> 
 	  </div>     
 	</div>
 	</>
