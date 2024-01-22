@@ -6,7 +6,7 @@ const Topbar = () => {
         <div className="topbar">
             <div className="topbarWrapper">
                 <div className='topLeft'>
-                    <span className="title">SumSynth - Web</span>
+                    <span className="title">SumGen - Web</span>
                 </div>                   
             </div>
         </div>
