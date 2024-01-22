@@ -1,6 +1,6 @@
 import './App.css';
 import Topbar from "./topbar/Topbar";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -12,6 +12,7 @@ const endpoint = "http://localhost:3001/gen";
 
 function App() {
 	
+	const [first, setFirst] = useState(true);
 	const [placeholder, setPlaceholder] = useState("");
 	const [inputSpec, setinputSpec] = useState("");
 	const [language, setLang] = useState('c');
@@ -24,26 +25,29 @@ function App() {
 	fetch(strlen)
 	.then(r => r.text())
 	.then(text => {
-		if(!inputSpec){
-			setPlaceholder(text);
+		if(first){
 			setinputSpec(text);
+			setPlaceholder(text);
 		}
 	});
 
-
 	const handleInputChange = (event) => {
+		console.log(event.target.value)
+		setFirst(false);
 		setinputSpec(event.target.value);
 	};
 
   	const handleFormSubmit = async (event) => {
 		event.preventDefault();
-		console.log('Sending text to the server:', inputSpec);
 		
 		if(!inputSpec){
+			console.log('here');
 			setgenSummary("");
 			return;
 		}
-
+		
+		console.log('Sending text to the server:', inputSpec);
+		
 		try {
 			fetch(endpoint, {
 				method: 'POST',
@@ -89,32 +93,17 @@ function App() {
 		<div className='titles'>Summary Specification</div>
 		
 		<form className='form' onSubmit={handleFormSubmit}>
-		{!inputError && <TextField 
+		{<TextField
+			error={inputError}
+			helperText={inputError? "Invalid input spec.": undefined}
 			fullWidth 
 			multiline
-			// label="Input Spec"
-			placeholder={placeholder} 
-			// value={placeholder}
+			value={first? inputSpec : undefined} 
 			onChange={handleInputChange}
 			color='warning'
 			variante='outlined'
 			rows={10}
 		/>}
-
-		{inputError && <TextField
-			error
-			helperText="Invalid input spec."
-			fullWidth 
-			multiline
-			label="Input Spec"
-			// placeholder={placeholder} 
-			// value={placeholder}
-			onChange={handleInputChange}
-			color='warning'
-			variante='outlined'
-			rows={10}
-		/>}
-
 		
 		<div className='generators'> 
 		<ToggleButtonGroup
