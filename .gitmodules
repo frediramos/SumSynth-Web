@@ -1,0 +1,3 @@
+[submodule "server/SumSynth"]
+	path = server/SumSynth
+	url = git@github.com:rafa1906/SumSynth.git
