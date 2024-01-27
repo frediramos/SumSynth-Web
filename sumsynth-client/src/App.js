@@ -10,7 +10,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import strlen from "./placeholders/strlen.in";
 
-const endpoint = "http://localhost:3001/gen";
+const endpoint = "https://gen.sumsynth.duckdns.org/gen";
 
 function App() {
 	
