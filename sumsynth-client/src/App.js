@@ -6,13 +6,32 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import ListSubheader from '@mui/material/ListSubheader';
+
 import SyntaxHighlighter from 'react-syntax-highlighter'; 
 
 import strlen from "./placeholders/strlen.in";
 
 const endpoint = "http://localhost:3001/gen";
 
+function dropDownItems(names) {
+
+	return names.map((name) => (
+		<MenuItem key={name} value={name}>
+		  {name}
+		</MenuItem>
+	  ))
+}
+
 function App() {
+
+	const [defaultSumms, setDefaultSumms] = useState({"under":{}});
 	
 	const [first, setFirst] = useState(true);
 	const [placeholder, setPlaceholder] = useState("");
@@ -94,6 +113,24 @@ function App() {
 
 	  <div className='formBox'>
 		<div className='titles'>Summary Specification</div>
+
+		<Box sx={{ mb: 3, mt: 3 }}>
+		<FormControl fullWidth size="small">
+        <InputLabel>Default spec</InputLabel>
+        <Select label="Default spec" >
+		
+			<ListSubheader>Under</ListSubheader>
+				{dropDownItems(["strlen", "strcmp"])}
+			<ListSubheader>Over</ListSubheader>
+				<MenuItem value={3}>Option 3</MenuItem>
+				<MenuItem value={4}>Option 4</MenuItem>
+			<ListSubheader>Exact</ListSubheader>
+				<MenuItem value={3}>Option 3</MenuItem>
+				<MenuItem value={4}>Option 4</MenuItem>    
+		
+		</Select>
+      	</FormControl>
+    	</Box>
 		
 		<form className='form' onSubmit={handleFormSubmit}>
 		{<TextField
@@ -111,8 +148,7 @@ function App() {
 		
 		<div className='generators'> 
 		<ToggleButtonGroup
-			style={{marginTop: "1%"}}
-			sx={{ mb: 1 }}
+			sx={{ mb: 1, mt: "1%" }}
 			exclusive
 			value={generator}
 			onChange={(_e, gen) => {if(gen !== null) setGenerator(gen);}}
