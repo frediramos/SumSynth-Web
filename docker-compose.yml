@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  sumsynth_web:
+    build:
+      context: .
+      args:
+        SUMSYNTH_PATH: ./server/SumSynth/sumsynth
+    deploy:
+      resources:
+          limits:
+            cpus: '2'
+            memory: 1024M
+    ports:
+      - 3000:3000
+      - 3001:3001
+    security_opt:
+      - no-new-privileges
+    restart: unless-stopped

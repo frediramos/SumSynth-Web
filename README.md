@@ -1,4 +1,5 @@
 # SumSynth-Web
+
 Interactive WebPage for SumSynth
 
 ## Start Server
@@ -9,8 +10,8 @@ Interactive WebPage for SumSynth
 $ cd server && ./install.sh
 ```
 
-
 ### Install Web Server Dependencies
+
 Server currently uses **Node version 17**
 
 ```sh
@@ -24,8 +25,8 @@ $ npm i -g nodemon
 $ nodemon index.js
 ```
 
-
 ## Start Client
+
 ```sh
 $ cd sumsynth-client
 $ npm start
