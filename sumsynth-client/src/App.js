@@ -16,7 +16,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import default_specs from './summaries/summaries';
 
-const endpoint = "http://localhost:3001/gen";
+const endpoint = "https://gen.sumsynth.duckdns.org/gen";
 
 function dropDownItems(gen, specs) {
 
