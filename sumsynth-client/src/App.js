@@ -6,36 +6,39 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import ListSubheader from '@mui/material/ListSubheader';
-
 import SyntaxHighlighter from 'react-syntax-highlighter'; 
 
-import strlen from "./placeholders/strlen.in";
+import default_specs from './summaries/summaries';
 
-const endpoint = "https://gen.sumsynth.duckdns.org/gen";
+const endpoint = "http://localhost:3001/gen";
 
-function dropDownItems(names) {
+function dropDownItems(gen, specs) {
 
-	return names.map((name) => (
-		<MenuItem key={name} value={name}>
-		  {name}
+	return Object.keys(specs).map((key) =>  (
+		<MenuItem key={key} value={
+			JSON.stringify(
+			{"gen": gen,
+			"key": key,
+			"spec": specs[key]})
+			}>
+		  {key}
 		</MenuItem>
-	  ))
+	));
+
 }
 
 function App() {
 
-	const [defaultSumms, setDefaultSumms] = useState({"under":{}});
+	const default_strlen = default_specs["under"]["strlen"]
 	
-	const [first, setFirst] = useState(true);
-	const [placeholder, setPlaceholder] = useState("");
-	const [inputSpec, setinputSpec] = useState("");
+	const [summName, setSummName] = useState('');
+	const [inputSpec, setinputSpec] = useState(default_strlen);
 	const [language, setLang] = useState('c');
 	const [displaylang, setDisplayLang] = useState('c');
 	const [generator, setGenerator] = useState('under');
@@ -43,21 +46,19 @@ function App() {
 	const [inputError, setInputError] = useState(false)
 	const [genSummary, setgenSummary] = useState('')
 	
- 
-	fetch(strlen)
-	.then(r => r.text())
-	.then(text => {
-		if(first){
-			setinputSpec(text);
-			setPlaceholder(text);
-		}
-	});
 
 	const handleInputChange = (event) => {
 		console.log(event.target.value)
-		setFirst(false);
 		setinputSpec(event.target.value);
 	};
+
+	const handleDropdownChange = (event) => {
+		const value = event.target.value;
+		const json_value = JSON.parse(value)
+		setGenerator(json_value["gen"]);
+		setinputSpec(json_value["spec"]);
+		setSummName(value);
+	  };
 
   	const handleFormSubmit = async (event) => {
 		event.preventDefault();
@@ -117,34 +118,35 @@ function App() {
 		<Box sx={{ mb: 3, mt: 3 }}>
 		<FormControl fullWidth size="small">
         <InputLabel>Default spec</InputLabel>
-        <Select label="Default spec" >
-		
-			<ListSubheader>Under</ListSubheader>
-				{dropDownItems(["strlen", "strcmp"])}
-			<ListSubheader>Over</ListSubheader>
-				<MenuItem value={3}>Option 3</MenuItem>
-				<MenuItem value={4}>Option 4</MenuItem>
-			<ListSubheader>Exact</ListSubheader>
-				<MenuItem value={3}>Option 3</MenuItem>
-				<MenuItem value={4}>Option 4</MenuItem>    
+        <Select
+			label="Default spec"
+			onChange={handleDropdownChange}
+			value={summName}
+		>
+			<ListSubheader sx={{fontWeight: 'bold', borderBottom: 1}} color="primary">Under</ListSubheader>
+				{dropDownItems("under", default_specs["under"])}
+			<ListSubheader sx={{fontWeight: 'bold', borderBottom:1, borderTop:1 }} color="primary">Over</ListSubheader>
+				{dropDownItems("over", default_specs["over"])}
+			<ListSubheader sx={{fontWeight: 'bold', borderBottom:1, borderTop:1 }} color="primary">Exact</ListSubheader>
+				{dropDownItems("exact", default_specs["exact"])}
 		
 		</Select>
       	</FormControl>
     	</Box>
 		
 		<form className='form' onSubmit={handleFormSubmit}>
-		{<TextField
+		<TextField
 			error={inputError}
 			helperText={inputError? "Invalid input spec.": undefined}
-			placeholder={inputError? placeholder: undefined}
-			fullWidth 
+			placeholder={inputError? default_strlen: undefined}
+			fullWidth
 			multiline
-			value={first? inputSpec : undefined} 
+			value={inputSpec} 
 			onChange={handleInputChange}
 			color='warning'
 			variante='outlined'
 			rows={10}
-		/>}
+		/>
 		
 		<div className='generators'> 
 		<ToggleButtonGroup
