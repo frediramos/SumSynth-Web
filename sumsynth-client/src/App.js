@@ -14,7 +14,7 @@ import Select from '@mui/material/Select';
 import ListSubheader from '@mui/material/ListSubheader';
 import SyntaxHighlighter from 'react-syntax-highlighter'; 
 
-import default_specs from './summaries/summaries';
+import defaultSpecs from './summaries/summaries';
 
 const endpoint = "https://gen.sumsynth.duckdns.org/gen";
 
@@ -27,7 +27,16 @@ function dropDownItems(gen, specs) {
 			"key": key,
 			"spec": specs[key]})
 			}>
+          <SyntaxHighlighter
+		  language='javascript'
+		    customStyle={{
+				backgroundColor: "transparent",
+			 	marginTop: "-3pt",
+			 	marginBottom: "-3pt",			
+			 	marginLeft: "-5pt",			
+		  	}}>
 		  {key}
+          </SyntaxHighlighter>
 		</MenuItem>
 	));
 
@@ -35,7 +44,7 @@ function dropDownItems(gen, specs) {
 
 function App() {
 
-	const default_strlen = default_specs["under"]["strlen"]
+	const default_strlen = defaultSpecs["under"]["strlen"]
 	
 	const [summName, setSummName] = useState('');
 	const [inputSpec, setinputSpec] = useState(default_strlen);
@@ -122,13 +131,14 @@ function App() {
 			label="Default spec"
 			onChange={handleDropdownChange}
 			value={summName}
+			MenuProps={{ PaperProps: { sx: { maxHeight: 600 } } }}
 		>
-			<ListSubheader sx={{fontWeight: 'bold', borderBottom: 1}} color="primary">Under</ListSubheader>
-				{dropDownItems("under", default_specs["under"])}
-			<ListSubheader sx={{fontWeight: 'bold', borderBottom:1, borderTop:1 }} color="primary">Over</ListSubheader>
-				{dropDownItems("over", default_specs["over"])}
-			<ListSubheader sx={{fontWeight: 'bold', borderBottom:1, borderTop:1 }} color="primary">Exact</ListSubheader>
-				{dropDownItems("exact", default_specs["exact"])}
+			<ListSubheader color='primary' sx={{fontWeight: 'bold', borderBottom: 1}}>UNDER</ListSubheader>
+				{dropDownItems("under", defaultSpecs["under"])}
+			<ListSubheader color='primary' sx={{fontWeight: 'bold', borderBottom: 1}}>OVER</ListSubheader>
+				{dropDownItems("over", defaultSpecs["over"])}
+			<ListSubheader color='primary' sx={{fontWeight: 'bold', borderBottom: 1}}>EXACT</ListSubheader>
+				{dropDownItems("exact", defaultSpecs["exact"])}
 		
 		</Select>
       	</FormControl>
