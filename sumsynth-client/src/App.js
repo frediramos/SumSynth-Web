@@ -18,6 +18,9 @@ import defaultSpecs from './summaries/summaries';
 
 const endpoint = "https://gen.sumsynth.duckdns.org/gen";
 
+// Local endpoint for testing
+// const endpoint = "http://localhost:3001/gen"
+
 function dropDownItems(gen, specs) {
 
 	return Object.keys(specs).map((key) =>  (
