@@ -47,10 +47,16 @@ function dropDownItems(gen, specs) {
 
 function App() {
 
-	const default_strlen = defaultSpecs["under"]["strlen"]
-	
+	const default_summ_name = window.location.pathname.toString().slice(1)
+	const default_strlen = defaultSpecs["under"]['strlen']
+	let default_summ = defaultSpecs["under"][default_summ_name]
+
+	if (default_summ === undefined){
+		default_summ = default_strlen
+	}
+
 	const [summName, setSummName] = useState('');
-	const [inputSpec, setinputSpec] = useState(default_strlen);
+	const [inputSpec, setinputSpec] = useState(default_summ);
 	const [language, setLang] = useState('c');
 	const [displaylang, setDisplayLang] = useState('c');
 	const [generator, setGenerator] = useState('under');
@@ -151,7 +157,7 @@ function App() {
 		<TextField
 			error={inputError}
 			helperText={inputError? "Invalid input spec.": undefined}
-			placeholder={inputError? default_strlen: undefined}
+			placeholder={inputError? default_summ: undefined}
 			fullWidth
 			multiline
 			value={inputSpec} 
