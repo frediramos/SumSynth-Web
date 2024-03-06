@@ -48,18 +48,24 @@ function dropDownItems(gen, specs) {
 function App() {
 
 	const default_summ_name = window.location.pathname.toString().slice(1)
-	const default_strlen = defaultSpecs["under"]['strlen']
-	let default_summ = defaultSpecs["under"][default_summ_name]
-
-	if (default_summ === undefined){
-		default_summ = default_strlen
+	let  default_summ = defaultSpecs["under"]['strlen']
+	let default_generator = "under"
+	
+	if (default_summ_name !== undefined){
+		for (const g of ["under", "over"]){
+			if(defaultSpecs[g][default_summ_name] !== undefined){
+				default_summ = defaultSpecs[g][default_summ_name]
+				default_generator = g
+				break;
+			}
+		}	
 	}
-
+	
 	const [summName, setSummName] = useState('');
 	const [inputSpec, setinputSpec] = useState(default_summ);
 	const [language, setLang] = useState('c');
 	const [displaylang, setDisplayLang] = useState('c');
-	const [generator, setGenerator] = useState('under');
+	const [generator, setGenerator] = useState(default_generator);
 	
 	const [inputError, setInputError] = useState(false)
 	const [genSummary, setgenSummary] = useState('')
